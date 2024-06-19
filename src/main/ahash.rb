@@ -11,8 +11,12 @@ def bw(image)
 end
 
 def ahash(input)
-  input = input.thumbnail_image(8, height: 8, size: :force)
-  pixels = bw(input).to_a.flatten
+  image = if input.is_a? Vips::Image
+    input.thumbnail_image(9, height: 8, size: :force)
+  else
+    Vips::Image.thumbnail(input, 9, height: 8, size: :force)
+  end
+  pixels = bw(image).to_a.flatten
   avg = pixels.sum / pixels.size
   pixels.map { |p| p >= avg ? 1 : 0 }.join
 end
@@ -57,4 +61,3 @@ def main
 end
 
 main
-p 'done'
